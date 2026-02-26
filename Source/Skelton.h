@@ -6,4 +6,7 @@ public:
 	Skelton();
 	~Skelton();
 	void Update() override;
+private:
+	VECTOR3 playerPos;
+	VECTOR3 dist;
 };

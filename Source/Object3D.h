@@ -11,4 +11,5 @@ protected:
 	int hModel;
 	VECTOR3 position;
 	VECTOR3 rotation;
+	VECTOR3 velocity;
 };

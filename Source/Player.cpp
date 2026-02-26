@@ -10,6 +10,8 @@ Player::Player()
 	MV1SetFrameUserLocalMatrix(hModel, root, MGetRotY(DX_PI_F));
 	position = VECTOR3(0,0,0);
 	rotation = VECTOR3(0, 0, 0);
+	velocity = VECTOR3(0, 0, 0);
+	velocityY = 0;
 }
 
 Player::~Player()
@@ -18,7 +20,8 @@ Player::~Player()
 
 void Player::Update()
 {
-	
+	const float G = 3.0f / 60.0f;
+	const float H = 64.0f * 3.0f;
 	if (CheckHitKey(KEY_INPUT_D)) {
 		rotation.y += 3.0f*DegToRad;
 	}
@@ -31,12 +34,17 @@ void Player::Update()
 		//↑回っていないベクトル*回転行列
 		position += velocity;
 	}
-	
 	//地面との当たり判定
 	Stage* stage = FindGameObject<Stage>();
 	VECTOR3 hitPos;
-	stage->CollideRay(position+VECTOR3(0,1000,0),position+VECTOR3(0,-1000,0),&hitPos);
+	if (Input::IsKeyOnTrig(KEY_INPUT_SPACE)) {
+		velocityY= sqrt(2 * G * H);
+	}
+	position.y += velocityY;
+	velocityY -= G;
+	stage->CollideRay(position + VECTOR3(0, 1000, 0), position + VECTOR3(0, -1000, 0), &hitPos);
 	if (stage) {
+		if(position.y<hitPos.y)
 		position = hitPos;
 	}
 	//カメラの位置をプレイヤーの位置に合わせる->回っていないベクトル＊プレイヤーの回転行列+プレイヤーの位置

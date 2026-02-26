@@ -11,4 +11,12 @@ public:
 	~PlayScene();
 	void Update() override;
 	void Draw() override;
+private: 
+	int timer;
+	enum Mode {
+		READY,
+		PLAY,
+		END
+	};
+	int mode;
 };

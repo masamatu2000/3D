@@ -7,6 +7,7 @@ public:
 	Player();
 	~Player();
 	void Update() override;
+	VECTOR3 GetPosition() { return position; }
 private:
-	
+	float velocityY;
 };

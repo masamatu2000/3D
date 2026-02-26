@@ -5,6 +5,7 @@ Object3D::Object3D()
 	hModel = -1;
 	position = VECTOR3(0, 0, 0);
 	rotation = VECTOR3(0, 0, 0);
+	velocity = VECTOR3(0, 0, 0);
 }
 
 Object3D::~Object3D()
