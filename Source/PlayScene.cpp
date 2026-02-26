@@ -1,10 +1,12 @@
 #include "PlayScene.h"
 #include"Player.h"
 #include"Stage.h"
+#include"Skelton.h"
 PlayScene::PlayScene()
 {
 	new Player();
 	new Stage();
+	new Skelton();
 }
 
 PlayScene::~PlayScene()

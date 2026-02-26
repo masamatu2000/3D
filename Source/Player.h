@@ -7,5 +7,6 @@ public:
 	Player();
 	~Player();
 	void Update() override;
+private:
 	
 };

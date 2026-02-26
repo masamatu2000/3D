@@ -3,7 +3,6 @@
 #include"Stage.h"
 Player::Player()
 {
-	
 	SetCameraPositionAndTarget_UpVecY(VECTOR3(0,300,-400),VECTOR3(0,250,0));
 	hModel = MV1LoadModel("data/models/Character/Player/PC.mv1");
 	assert(hModel >0);
@@ -32,6 +31,7 @@ void Player::Update()
 		//↑回っていないベクトル*回転行列
 		position += velocity;
 	}
+	
 	//地面との当たり判定
 	Stage* stage = FindGameObject<Stage>();
 	VECTOR3 hitPos;
@@ -40,7 +40,11 @@ void Player::Update()
 		position = hitPos;
 	}
 	//カメラの位置をプレイヤーの位置に合わせる->回っていないベクトル＊プレイヤーの回転行列+プレイヤーの位置
-	VECTOR3 camPos = VECTOR3(0, 300, -400) * MGetRotY(rotation.y)+position;
+	VECTOR3 camPos = VECTOR3(0, 300, -400);
+	if (CheckHitKey(KEY_INPUT_R)) {
+		camPos.z *= -1;
+	}
+	camPos = camPos * MGetRotY(rotation.y) + position;
 	SetCameraPositionAndTarget_UpVecY(camPos, position+VECTOR3(0, 250, 0));
 }
 

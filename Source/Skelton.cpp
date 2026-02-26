@@ -1,5 +1,6 @@
 #include "Skelton.h"
 #include<assert.h>
+#include"Stage.h"
 Skelton::Skelton()
 {
 	hModel = MV1LoadModel("data/models/Skelton/Skelton.mv1");
@@ -16,4 +17,10 @@ Skelton::~Skelton()
 
 void Skelton::Update()
 {
+	Stage* stage = FindGameObject<Stage>();
+	VECTOR3 hitPos;
+	stage->CollideRay(position + VECTOR3(0, 1000, 0), position + VECTOR3(0, -1000, 0), &hitPos);
+	if (stage) {
+		position = hitPos;
+	}
 }
