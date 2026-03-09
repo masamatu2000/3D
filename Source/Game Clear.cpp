@@ -1,20 +1,19 @@
-#include "GameOver.h"
+#include "Game Clear.h"
 
-GameOver::GameOver()
+GameClear::GameClear()
 {
 	position = VECTOR3(200, 400, 0);
 	startX = 800;
 	endX = 200;
 	maxTime = 5.0f;
 	time = 0.0f;
-
 }
 
-GameOver::~GameOver()
+GameClear::~GameClear()
 {
 }
 
-void GameOver::Update()
+void GameClear::Update()
 {
 	if (Input::IsKeyOnTrig(KEY_INPUT_P)) {
 		SceneManager::ChangeScene("PLAY");
@@ -24,11 +23,15 @@ void GameOver::Update()
 	}
 }
 
-void GameOver::Draw()
+void GameClear::Draw()
 {
-	DrawString(0, 0, "GAME OVER", COL_RED);
+	int fsize = GetFontSize();
+	SetFontSize(fsize * 5);
+	DrawString(400, 384, "GAME CLEAR", COL_YELLOW);
+	SetFontSize(fsize);
 	DrawFormatString(0, 50, COL_WHITE, "CoG: %s", Version());
 	DrawFormatString(0, 75, COL_WHITE, "DxLib: %s", DXLIB_VERSION_STR_T);
 	DrawFormatString(0, 100, COL_WHITE, "FPS: %4.1f", 1.0f / Time::DeltaTime());
-	DrawString(100, 400, "Push [P]Key To Continue...", COL_WHITE);
+	DrawString(450,500 , "Push [P]Key To Continue...", COL_WHITE);
+
 }

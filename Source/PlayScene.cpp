@@ -23,11 +23,18 @@ void PlayScene::Update()
 	
 	if (timer <SkeltonAppear&&mode==READY) {
 		timer++;
+		float fsize = GetFontSize();
+		SetFontSize(fsize * 2);
+		DrawString(1024 / 2, 1024 / 2, "Š[œ‚©‚ç“¦‚°‚ëII", GetColor(255, 0, 0));
+		DrawFormatString(1024 / 2,0, GetColor(255, 255, 255), "Š[œoŒ»‚Ü‚ÅŒã%d•b", ((SkeltonAppear - timer )/ 60));
+		SetFontSize(fsize);
 		if (timer >= SkeltonAppear) {
 			new Skelton();
 			mode = PLAY;
 		}
 	}
+	DrawString(1024 , 1024/2, "R->ƒJƒƒ‰”½“]", GetColor(255, 255, 255));
+	DrawString(1024, 1024 / 2 + 50, "W->‘Oi,AorD->•ûŒü“]Š·", GetColor(255, 255, 255));
 	if (Input::IsKeyOnTrig(KEY_INPUT_T)) {
 		SceneManager::ChangeScene("TITLE");
 	}

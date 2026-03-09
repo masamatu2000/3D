@@ -3,7 +3,11 @@
 #include"Stage.h"
 #include"Player.h"
 namespace {
-	VECTOR3 PlayerLimitDis = { 0,0,10 };
+	const VECTOR3 PlayerLimitDis = { 50,0,50};
+	int GAME_CLEAR_TIMER = 3600;
+	float DistX;
+	float DistY;
+	float DistZ;
 }
 Skelton::Skelton()
 {
@@ -13,6 +17,7 @@ Skelton::Skelton()
 	MV1SetFrameUserLocalMatrix(hModel, root, MGetRotY(DX_PI_F));
 	position = VECTOR3(0, 0, 0);
 	rotation = VECTOR3(0, 0, 0);
+	timer = 0;
 }
 
 Skelton::~Skelton()
@@ -29,9 +34,20 @@ void Skelton::Update()
 	if (stage) {
 		position = hitPos;
 	}
-	dist = playerPos - position;
-	if (dist.z < PlayerLimitDis.z && dist.x < PlayerLimitDis.x) {//ƒxƒNƒ^[Œ^“¯Žm‚ÌŒvŽZ‚Í–³—@x,y,z‚»‚ê‚¼‚ê‚ÅŒvŽZ‚·‚é
+	DistX =(playerPos.x-position.x);
+	DistY = (playerPos.y - position.y);
+	DistZ = (playerPos.z - position.z);
+	dist = VECTOR3{ DistX,0,DistZ };
+	if (abs(dist.z) < PlayerLimitDis.z && abs(dist.x)< PlayerLimitDis.x) {//ƒxƒNƒ^[Œ^“¯Žm‚ÌŒvŽZ‚Í–³—@x,y,z‚»‚ê‚¼‚ê‚ÅŒvŽZ‚·‚é
 		SceneManager::ChangeScene("GAME OVER");
 	}
-	position += dist * Time::DeltaTime();
+	
+	if (timer < GAME_CLEAR_TIMER) {
+		timer++;
+		DrawFormatString(1024 / 2, 0, GetColor(255, 255, 255), "ƒQ[ƒ€ƒNƒŠƒA‚Ü‚Å‚ ‚Æ%d•b", (GAME_CLEAR_TIMER - timer) / 60);
+		if (timer >= GAME_CLEAR_TIMER) {
+			SceneManager::ChangeScene("GAME CLEAR");
+		}
+	}
+	position += dist * Time::DeltaTime()*0.5;
 }

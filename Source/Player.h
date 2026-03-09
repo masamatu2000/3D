@@ -10,4 +10,5 @@ public:
 	VECTOR3 GetPosition() { return position; }
 private:
 	float velocityY;
+	bool OnGround;
 };

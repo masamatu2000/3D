@@ -9,4 +9,6 @@ public:
 private:
 	VECTOR3 playerPos;
 	VECTOR3 dist;
+	int timer;
+
 };

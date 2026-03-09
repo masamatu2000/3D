@@ -12,6 +12,7 @@ Player::Player()
 	rotation = VECTOR3(0, 0, 0);
 	velocity = VECTOR3(0, 0, 0);
 	velocityY = 0;
+	OnGround = true;
 }
 
 Player::~Player()
@@ -37,15 +38,18 @@ void Player::Update()
 	//地面との当たり判定
 	Stage* stage = FindGameObject<Stage>();
 	VECTOR3 hitPos;
-	if (Input::IsKeyOnTrig(KEY_INPUT_SPACE)) {
+	if (Input::IsKeyOnTrig(KEY_INPUT_SPACE)&&OnGround) {
 		velocityY= sqrt(2 * G * H);
+		OnGround = false;
 	}
 	position.y += velocityY;
 	velocityY -= G;
 	stage->CollideRay(position + VECTOR3(0, 1000, 0), position + VECTOR3(0, -1000, 0), &hitPos);
 	if (stage) {
-		if(position.y<hitPos.y)
-		position = hitPos;
+		if (position.y < hitPos.y) {
+			position = hitPos;
+			OnGround = true;
+		}
 	}
 	//カメラの位置をプレイヤーの位置に合わせる->回っていないベクトル＊プレイヤーの回転行列+プレイヤーの位置
 	VECTOR3 camPos = VECTOR3(0, 300, -400);
