@@ -8,7 +8,12 @@ public:
 	~Player();
 	void Update() override;
 	VECTOR3 GetPosition() { return position; }
+	void DrawStaminaUI();
 private:
 	float velocityY;
 	bool OnGround;
+	float Stamina;
+	float MaxStamina;
+	int timer;
+	bool IsTired;
 };

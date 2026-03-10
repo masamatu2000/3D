@@ -19,4 +19,5 @@ private:
 		END
 	};
 	int mode;
+	bool IsSpawned;
 };

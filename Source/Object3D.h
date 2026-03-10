@@ -7,6 +7,10 @@ public:
 	Object3D();
 	virtual ~Object3D();
 	virtual void Draw() override;
+	virtual void SetVel(VECTOR3 speed) { velocity = speed; }
+	virtual VECTOR3 GetVel() { return velocity; }
+	virtual VECTOR3 GetPos() { return position; }
+	virtual void SetPos(VECTOR3 pos) { position = pos; }
 protected:
 	int hModel;
 	VECTOR3 position;
