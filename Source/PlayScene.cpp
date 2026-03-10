@@ -42,12 +42,16 @@ void PlayScene::Update()
 		if (timer < GAME_CLEAR_TIMER) {
 			timer++;
 			DrawFormatString(1024 / 2, 0, GetColor(255, 255, 255), "ゲームクリアまであと%d秒", (GAME_CLEAR_TIMER - timer) / 60);
+
 			if (timer >= GAME_CLEAR_TIMER) {
 				SceneManager::ChangeScene("GAME CLEAR");
 			}
 			else if (!IsSpawned && timer >= GAME_CLEAR_TIMER / 2) {
 				skelton2 = new Skelton(VECTOR3{2250,642,-3072}, 6, timer);
 				IsSpawned = true;	
+			}
+			if (IsSpawned&&timer<(GAME_CLEAR_TIMER/2)+60*5) {
+				DrawString(1024 / 2, 50, "ガイコツ追加されたぞ！", GetColor(255, 0 ,0));
 			}
 		}
 

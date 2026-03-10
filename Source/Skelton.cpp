@@ -60,12 +60,11 @@ void Skelton::Update()
 	}
 	if (timer < GAME_CLEAR_TIMER) {
 		timer++;
-	
-	if (timer > GAME_CLEAR_TIMER - 60 * 10) {
-		ChangeSpeed = 8;
-	}
-	else if (timer > GAME_CLEAR_TIMER / 2) {
-		ChangeSpeed = 6;
-	}
+		if (timer > GAME_CLEAR_TIMER - 60 * 10) {
+			ChangeSpeed = 8;
+		}
+		else if (timer > GAME_CLEAR_TIMER / 2) {
+			ChangeSpeed = 6;
+		}
 	}
 }
