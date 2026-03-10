@@ -2,6 +2,7 @@
 #include"Player.h"
 #include"Stage.h"
 #include"Skelton.h"
+#include"Object.h"
 namespace {
 	const int SkeltonAppear = 600;
 	int GAME_CLEAR_TIMER = 3600;
@@ -12,6 +13,7 @@ PlayScene::PlayScene()
 {
 	new Player();
 	new Stage();
+	new Object();
 	//new Skelton();
 	timer = 0;
 	mode = READY;

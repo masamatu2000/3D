@@ -55,6 +55,7 @@ void Skelton::Update()
 	// ˆÚ“®
 	position.x+= dir.x * ChangeSpeed;
 	position.z+= dir.z * ChangeSpeed;
+
 	if (abs(dist.z) < PlayerLimitDis.z && abs(dist.x)< PlayerLimitDis.x) {//ƒxƒNƒ^[Œ^“¯Žm‚ÌŒvŽZ‚Í–³—@x,y,z‚»‚ê‚¼‚ê‚ÅŒvŽZ‚·‚é
 		SceneManager::ChangeScene("GAME OVER");
 	}

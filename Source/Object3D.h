@@ -11,6 +11,7 @@ public:
 	virtual VECTOR3 GetVel() { return velocity; }
 	virtual VECTOR3 GetPos() { return position; }
 	virtual void SetPos(VECTOR3 pos) { position = pos; }
+	virtual void SetModel(int model) { hModel = model; }
 protected:
 	int hModel;
 	VECTOR3 position;

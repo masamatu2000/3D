@@ -71,6 +71,7 @@
     <ClCompile Include="Source\Game Clear.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\SceneFactory.h" />
@@ -156,6 +157,9 @@
       <Filter>PlayScene</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game Clear.h">
+      <Filter>PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
   </ItemGroup>
