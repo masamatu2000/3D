@@ -9,6 +9,8 @@ public:
 	void Update() override;
 	VECTOR3 GetPosition() { return position; }
 	void DrawStaminaUI();
+	bool IsOnFigher();
+	void SetCam(bool cam) { IsPlayerCam = cam; }
 private:
 	float velocityY;
 	bool OnGround;
@@ -16,4 +18,6 @@ private:
 	float MaxStamina;
 	int timer;
 	bool IsTired;
+	bool IsPlayerCam;
+	bool IsOnFighter;
 };

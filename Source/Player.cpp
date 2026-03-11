@@ -1,11 +1,13 @@
 #include "Player.h"
 #include<assert.h>
 #include"Stage.h"
+#include"Fighter.h"
 namespace {
 	const float DASH_SPEED = 3.0f;
 	const int STAMINA_HEEL_TIMER = 60 * 3;
 	const float G = 3.0f / 60.0f;
 	const float H = 64.0f * 3.0f;
+	const float LIMIT_FIGHTER_DIS = 50;
 }
 Player::Player()
 {
@@ -23,6 +25,8 @@ Player::Player()
 	MaxStamina = Stamina;
 	timer = 0;
 	IsTired = false;
+	IsPlayerCam = true;
+	IsOnFighter = false;
 }
 
 Player::~Player()
@@ -31,6 +35,7 @@ Player::~Player()
 
 void Player::Update()
 {
+
 	if (!CheckHitKey(KEY_INPUT_LSHIFT) && IsTired) {
 		timer++;
 	}
@@ -42,26 +47,7 @@ void Player::Update()
 			IsTired = false;
 		}
 	}
-	if (CheckHitKey(KEY_INPUT_D)) {
-		rotation.y += 3.0f*DegToRad;
-	}
-	if (CheckHitKey(KEY_INPUT_A)) {
-		rotation.y -= 3.0f*DegToRad;
-	}
-	if (CheckHitKey(KEY_INPUT_W)) {
-		VECTOR3 velocity;
-		if (CheckHitKey(KEY_INPUT_LSHIFT)&&Stamina>0) {
-			Stamina--;
-			velocity = VECTOR3(0, 0, 5*DASH_SPEED) * MGetRotY(rotation.y);
-			IsTired = true;
-		}
-		//VECTOR3 velocity = VECTOR3(sinf(rotation.y) ,0, cosf(rotation.y))*3.0f;
-		else {
-			velocity = VECTOR3(0, 0, 5) * MGetRotY(rotation.y);
-		}
-		//↑回っていないベクトル*回転行列
-		position += velocity;
-	}
+	
 	DrawStaminaUI();
 	//地面との当たり判定
 	Stage* stage = FindGameObject<Stage>();
@@ -79,14 +65,37 @@ void Player::Update()
 			OnGround = true;
 		}
 	}
-	//カメラの位置をプレイヤーの位置に合わせる->回っていないベクトル＊プレイヤーの回転行列+プレイヤーの位置
-	VECTOR3 camPos = VECTOR3(0, 300, -400);
-	if (CheckHitKey(KEY_INPUT_R)) {
-		camPos.z *= -1;
+	if (IsPlayerCam) {
+		if (CheckHitKey(KEY_INPUT_D)) {
+			rotation.y += 3.0f * DegToRad;
+		}
+		if (CheckHitKey(KEY_INPUT_A)) {
+			rotation.y -= 3.0f * DegToRad;
+		}
+		if (CheckHitKey(KEY_INPUT_W)) {
+			VECTOR3 velocity;
+			if (CheckHitKey(KEY_INPUT_LSHIFT) && Stamina > 0) {
+				Stamina--;
+				velocity = VECTOR3(0, 0, 5 * DASH_SPEED) * MGetRotY(rotation.y);
+				IsTired = true;
+			}
+			//VECTOR3 velocity = VECTOR3(sinf(rotation.y) ,0, cosf(rotation.y))*3.0f;
+			else {
+				velocity = VECTOR3(0, 0, 5) * MGetRotY(rotation.y);
+			}
+			//↑回っていないベクトル*回転行列
+			position += velocity;
+		}
+		//カメラの位置をプレイヤーの位置に合わせる->回っていないベクトル＊プレイヤーの回転行列+プレイヤーの位置
+		VECTOR3 camPos = VECTOR3(0, 300, -400);
+		if (CheckHitKey(KEY_INPUT_R)) {
+			camPos.z *= -1;
+		}
+
+		camPos = camPos * MGetRotY(rotation.y) + position;
+		SetCameraPositionAndTarget_UpVecY(camPos, position + VECTOR3(0, 250, 0));
+		//DrawFormatString(0, 200, GetColor(255, 255, 255), "(%f,%f,%f)", position.x, position.y, position.z);
 	}
-	camPos = camPos * MGetRotY(rotation.y) + position;
-	SetCameraPositionAndTarget_UpVecY(camPos, position+VECTOR3(0, 250, 0));
-	DrawFormatString(0, 200, GetColor(255, 255, 255), "(%f,%f,%f)", position.x, position.y, position.z);
 }
 
 void Player::DrawStaminaUI() {
@@ -99,4 +108,20 @@ void Player::DrawStaminaUI() {
 	float CurrBarHeight = BarHeight * RatioOfStamina;
 	DrawBox(0, 400, 100, BarHeight, GetColor(0, 0, 0), TRUE);
 	DrawBox(0, 400+MaxStamina*(1-RatioOfStamina), 100, BarHeight, GetColor(253, 126, 0), TRUE);
+}
+bool Player::IsOnFigher() {
+	Fighter* fighter = FindGameObject<Fighter>();
+	VECTOR3 fPos = fighter->GetPos();
+	float DistX = (fPos.x - position.x);
+	float DistZ = (fPos.z - position.z);
+	VECTOR3 dist = VECTOR3(DistX, 0, DistZ);
+	float distance = VSize(dist);
+	if (distance<LIMIT_FIGHTER_DIS) {
+		DrawString(1024 / 2, 1024 / 2, "Eボタンを押せ！！", GetColor(255, 255, 255));
+		if (CheckHitKey(KEY_INPUT_E)) {
+			IsPlayerCam = false;
+			IsOnFighter = true;
+		}
+	}
+	return IsOnFighter;
 }

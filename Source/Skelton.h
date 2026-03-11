@@ -4,7 +4,7 @@ class Skelton : public Object3D
 {
 public:
 	Skelton();
-	Skelton(const VECTOR3 &pos, float speed, int time);
+	Skelton(const VECTOR3 &pos,int time);
 	~Skelton();
 	void Update() override;
 private:
@@ -13,4 +13,5 @@ private:
 	int timer;
 	VECTOR3 Dir;
 	float ChangeSpeed;
+	VECTOR3 patrolTarget;
 };

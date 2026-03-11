@@ -16,9 +16,10 @@ Skelton::Skelton()
 	rotation = VECTOR3(0, 0, 0);
 	timer = 0;
 	ChangeSpeed = 4;
+	patrolTarget = VECTOR3(GetRand(2000) - 1000, 0, GetRand(2000) - 1000);
 }
 
-Skelton::Skelton(const VECTOR3 &pos, float speed, int time)
+Skelton::Skelton(const VECTOR3 &pos,int time)
 {
 	hModel = MV1LoadModel("data/models/Skelton/Skelton.mv1");
 	assert(hModel > 0);
@@ -27,7 +28,8 @@ Skelton::Skelton(const VECTOR3 &pos, float speed, int time)
 	position = pos;
 	rotation = VECTOR3(0, 0, 0);
 	timer = time;
-	ChangeSpeed = speed;
+	ChangeSpeed = 4;
+	patrolTarget = VECTOR3(GetRand(2000) - 1000, 0, GetRand(2000) - 1000);
 }
 
 Skelton::~Skelton()
@@ -36,6 +38,7 @@ Skelton::~Skelton()
 
 void Skelton::Update()
 {
+	
 	Player* player = FindGameObject<Player>();
 	playerPos = player->GetPosition();
 	Stage* stage = FindGameObject<Stage>();
@@ -47,17 +50,38 @@ void Skelton::Update()
 	float DistX = (playerPos.x - position.x);
 	float DistZ = (playerPos.z - position.z);
 	dist = VECTOR3{ DistX,0,DistZ };
-	// å¸Ç´
-	float angle = atan2(dist.x, dist.z)+DX_PI_F;
-	rotation.y = angle;
-	// ê≥ãKâª
-	VECTOR3 dir = VNorm(dist);
-	// à⁄ìÆ
-	position.x+= dir.x * ChangeSpeed;
-	position.z+= dir.z * ChangeSpeed;
+	float distance = VSize(dist);
+	
+	if (distance < 1500) {
 
-	if (abs(dist.z) < PlayerLimitDis.z && abs(dist.x)< PlayerLimitDis.x) {//ÉxÉNÉ^Å[å^ìØémÇÃåvéZÇÕñ≥óùÅ@x,y,zÇªÇÍÇºÇÍÇ≈åvéZÇ∑ÇÈ
-		SceneManager::ChangeScene("GAME OVER");
+		// å¸Ç´
+		float angle = atan2(dist.x, dist.z) + DX_PI_F;
+		rotation.y = angle;
+
+		// ê≥ãKâª
+		VECTOR3 dir = VNorm(dist);
+
+		// à⁄ìÆ
+		position.x += dir.x * ChangeSpeed;
+		position.z += dir.z * ChangeSpeed;
+	}
+	else {
+		VECTOR3 dir = VSub(patrolTarget, position);
+
+		if (VSize(dir) < 50) {
+			patrolTarget = VECTOR3(GetRand(2000) - 1000, 0, GetRand(2000) - 1000);
+		}
+
+		dir = VNorm(dir);
+
+		position.x += dir.x * 2;
+		position.z += dir.z * 2;
+	}
+	
+	if ((abs(dist.z) < PlayerLimitDis.z && abs(dist.x)< PlayerLimitDis.x)) {//ÉxÉNÉ^Å[å^ìØémÇÃåvéZÇÕñ≥óùÅ@x,y,zÇªÇÍÇºÇÍÇ≈åvéZÇ∑ÇÈ
+		if (!player->IsOnFigher()) {
+			SceneManager::ChangeScene("GAME OVER");
+		}
 	}
 	if (timer < GAME_CLEAR_TIMER) {
 		timer++;
