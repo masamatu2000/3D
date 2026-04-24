@@ -75,6 +75,9 @@
     <ClCompile Include="Source\Fighter.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Animator.cpp">
+      <Filter>PlayScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\SceneFactory.h" />
@@ -166,6 +169,9 @@
       <Filter>PlayScene</Filter>
     </ClInclude>
     <ClInclude Include="Source\Fighter.h">
+      <Filter>PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Animator.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
   </ItemGroup>

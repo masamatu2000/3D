@@ -27,6 +27,13 @@ Player::Player()
 	IsTired = false;
 	IsPlayerCam = true;
 	IsOnFighter = false;
+	
+	animator = new Animator(hModel);
+	animator->AddFile(AnimState ::Anim_Run, "data/models/Character/Player/Anim_Run.mv1", true);
+	animator->AddFile(AnimState::Anim_Neutral,"data/models/Character/Player/Anim_Neutral.mv1",true);
+	animator->AddFile(AnimState::Anim_Jump, "data/models/Character/Player/Anim_Jump_In.mv1", false);
+	animator->Play(Anim_Neutral);
+	//animator->Play(0);
 }
 
 Player::~Player()
@@ -35,7 +42,9 @@ Player::~Player()
 
 void Player::Update()
 {
-
+	//アニメーション再生
+	animator->Update();
+	
 	if (!CheckHitKey(KEY_INPUT_LSHIFT) && IsTired) {
 		timer++;
 	}
@@ -55,6 +64,7 @@ void Player::Update()
 	if (Input::IsKeyOnTrig(KEY_INPUT_SPACE)&&OnGround) {
 		velocityY= sqrt(2 * G * H);
 		OnGround = false;
+		//animator->Play(Anim_Jump);
 	}
 	position.y += velocityY;
 	velocityY -= G;
@@ -74,6 +84,7 @@ void Player::Update()
 		}
 		if (CheckHitKey(KEY_INPUT_W)) {
 			VECTOR3 velocity;
+			animator->Play(Anim_Run);
 			if (CheckHitKey(KEY_INPUT_LSHIFT) && Stamina > 0) {
 				Stamina--;
 				velocity = VECTOR3(0, 0, 5 * DASH_SPEED) * MGetRotY(rotation.y);
@@ -83,8 +94,11 @@ void Player::Update()
 			else {
 				velocity = VECTOR3(0, 0, 5) * MGetRotY(rotation.y);
 			}
-			//↑回っていないベクトル*回転行列
+			//↑回っていないベクトル*回転行列←すげえ大事
 			position += velocity;
+		}
+		else {
+			animator->Play(Anim_Neutral);
 		}
 		//カメラの位置をプレイヤーの位置に合わせる->回っていないベクトル＊プレイヤーの回転行列+プレイヤーの位置
 		VECTOR3 camPos = VECTOR3(0, 300, -400);
