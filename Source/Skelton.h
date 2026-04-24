@@ -1,5 +1,6 @@
 #pragma once
 #include"Object3D.h"
+#include"Animator.h"
 class Skelton : public Object3D
 {
 public:
@@ -14,4 +15,9 @@ private:
 	VECTOR3 Dir;
 	float ChangeSpeed;
 	VECTOR3 patrolTarget;
+	enum AnimState {
+		Anim_Idle,
+		Anim_Run,
+	};
+	Animator* animator;
 };

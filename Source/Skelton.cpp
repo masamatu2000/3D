@@ -17,6 +17,9 @@ Skelton::Skelton()
 	timer = 0;
 	ChangeSpeed = 4;
 	patrolTarget = VECTOR3(GetRand(2000) - 1000, 0, GetRand(2000) - 1000);
+	animator = new Animator(hModel);
+	animator->AddFile(Anim_Idle, "data/models/Skelton/Anim_Idle.mv1", true);
+	animator->AddFile(Anim_Run, "data/models/Skelton/Anim_Run.mv1", true);
 }
 
 Skelton::Skelton(const VECTOR3 &pos,int time)
@@ -30,6 +33,9 @@ Skelton::Skelton(const VECTOR3 &pos,int time)
 	timer = time;
 	ChangeSpeed = 4;
 	patrolTarget = VECTOR3(GetRand(2000) - 1000, 0, GetRand(2000) - 1000);
+	animator = new Animator(hModel);
+	animator->AddFile(Anim_Idle, "data/models/Skelton/Anim_Idle.mv1", true);
+	animator->AddFile(Anim_Run, "data/models/Skelton/Anim_Run.mv1", true);
 }
 
 Skelton::~Skelton()
@@ -38,7 +44,8 @@ Skelton::~Skelton()
 
 void Skelton::Update()
 {
-	
+	animator->Update();
+	animator->Play(Anim_Run);
 	Player* player = FindGameObject<Player>();
 	playerPos = player->GetPosition();
 	Stage* stage = FindGameObject<Stage>();
@@ -64,6 +71,7 @@ void Skelton::Update()
 		// ˆÚ“®
 		position.x += dir.x * ChangeSpeed;
 		position.z += dir.z * ChangeSpeed;
+
 	}
 	else {
 		VECTOR3 dir = VSub(patrolTarget, position);
@@ -76,6 +84,7 @@ void Skelton::Update()
 
 		position.x += dir.x * 2;
 		position.z += dir.z * 2;
+
 	}
 	
 	if ((abs(dist.z) < PlayerLimitDis.z && abs(dist.x)< PlayerLimitDis.x)) {//ƒxƒNƒ^[Œ^“¯Žm‚ÌŒvŽZ‚Í–³—@x,y,z‚»‚ê‚¼‚ê‚ÅŒvŽZ‚·‚é

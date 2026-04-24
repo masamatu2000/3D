@@ -18,6 +18,10 @@ Object::Object(const VECTOR3 &pos,int time)
 	timer = time;
 	patrolTarget= VECTOR3(GetRand(2000) - 1000, 0, GetRand(2000) - 1000);
 	ChangeSpeed = 6;
+	animator = new Animator(hModel);
+	animator->AddFile(Anim_Neutral, "data/models/Character/RedGoblin/Anim_Neutral.mv1", true);
+	animator->AddFile(Anim_Run, "data/models/Character/RedGoblin/Anim_Run.mv1", true);
+	animator->AddFile(Anim_Attack1, "data/models/Character/RedGoblin/Anim_Attack1.mv1", true);
 }
 
 Object::~Object()
@@ -26,6 +30,7 @@ Object::~Object()
 
 void Object::Update()
 {
+	animator->Update();
 	Player* player = FindGameObject<Player>();
 	playerPos = player->GetPosition();
 	Stage* stage = FindGameObject<Stage>();
@@ -40,7 +45,7 @@ void Object::Update()
 	float distance = VSize(dist);
 	
 	if (distance < 1500 ) {
-
+		animator->Play(Anim_Run);
 		// Œü‚«
 		float angle = atan2(dist.x, dist.z) + DX_PI_F;
 		rotation.y = angle;
@@ -54,7 +59,7 @@ void Object::Update()
 	}
 	else {
 		VECTOR3 dir = VSub(patrolTarget, position);
-
+		animator->Play(Anim_Neutral);
 		if (VSize(dir) < 50) {
 			patrolTarget = VECTOR3(GetRand(2000) - 1000, 0, GetRand(2000) - 1000);
 		}
