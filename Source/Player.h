@@ -5,6 +5,7 @@
 class Player;
 class PlayerStateBase {
 public:
+	PlayerStateBase() = delete;
 	PlayerStateBase(Player* parent) { player = parent; }
 	~PlayerStateBase() {}
 	virtual void Update() {}
@@ -82,4 +83,5 @@ private:
 	PlayerStateBase* stateInst;
 	void ChangeState(State st);
 	int hWeapon;
+	bool Attack();
 };

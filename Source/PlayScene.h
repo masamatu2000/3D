@@ -18,6 +18,8 @@ private:
 		PLAY,
 		END
 	};
+	void Ready();
+	void Play();
 	int mode;
 	bool IsSpawned;
 };

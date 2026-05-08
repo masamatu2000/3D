@@ -20,6 +20,8 @@ Skelton::Skelton()
 	animator = new Animator(hModel);
 	animator->AddFile(Anim_Idle, "data/models/Skelton/Anim_Idle.mv1", true);
 	animator->AddFile(Anim_Run, "data/models/Skelton/Anim_Run.mv1", true);
+	
+
 }
 
 Skelton::Skelton(const VECTOR3 &pos,int time)
@@ -36,6 +38,7 @@ Skelton::Skelton(const VECTOR3 &pos,int time)
 	animator = new Animator(hModel);
 	animator->AddFile(Anim_Idle, "data/models/Skelton/Anim_Idle.mv1", true);
 	animator->AddFile(Anim_Run, "data/models/Skelton/Anim_Run.mv1", true);
+	
 }
 
 Skelton::~Skelton()

@@ -21,6 +21,7 @@ private:
 		Anim_Neutral,
 		Anim_Run,
 		Anim_Attack1,
+		Anim_Damage,
 	};
 };
 //問題

@@ -22,6 +22,7 @@ Object::Object(const VECTOR3 &pos,int time)
 	animator->AddFile(Anim_Neutral, "data/models/Character/RedGoblin/Anim_Neutral.mv1", true);
 	animator->AddFile(Anim_Run, "data/models/Character/RedGoblin/Anim_Run.mv1", true);
 	animator->AddFile(Anim_Attack1, "data/models/Character/RedGoblin/Anim_Attack1.mv1", true);
+	animator->AddFile(Anim_Damage, "data/models/Character/RedGoblin/Anim_Damage.mv1", false);
 }
 
 Object::~Object()
@@ -30,6 +31,7 @@ Object::~Object()
 
 void Object::Update()
 {
+
 	animator->Update();
 	Player* player = FindGameObject<Player>();
 	playerPos = player->GetPosition();

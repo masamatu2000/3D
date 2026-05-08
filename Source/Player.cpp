@@ -2,6 +2,7 @@
 #include<assert.h>
 #include"Stage.h"
 #include"Fighter.h"
+#include"Goblin.h"
 namespace {
 	const float DASH_SPEED = 3.0f;
 	const int STAMINA_HEEL_TIMER = 60 * 3;
@@ -146,6 +147,20 @@ void Player::ChangeState(State st)
 	}
 }
 
+bool Player::Attack()
+{
+	//std::list<Goblin*>gobsÅEÅEÅE
+	auto gobs = FindGameObjects<Goblin>();
+	int wp = MV1SearchFrame(hModel, "wp");
+	MATRIX m = MV1GetFrameLocalWorldMatrix(hModel, wp);
+	VECTOR3 p = VECTOR3(0, 0, 0) * m;
+	VECTOR3 edge = VECTOR3(0, -100, 0) * m;
+	for (auto g : gobs) {
+		g->PlayerAttack(edge,p);
+	}
+	return false;
+}
+
 PlayerNormal::PlayerNormal(Player* parent) :PlayerStateBase(parent)
 {
 
@@ -208,16 +223,19 @@ PlayerAttack1::~PlayerAttack1()
 
 void PlayerAttack1::Update()
 {
-	
-	if (player->animator->GetCurrentFrame() >= 8.5f) {
+	float frame = player->animator->GetCurrentFrame();
+	if (frame >= 3.5f && frame <= 8.5f) {
+		player->Attack();
+	}
+	if (player->animator->IsFinish()) {
+		player->ChangeState(Player::sNormal);
+	}
+
+	else if (player->animator->GetCurrentFrame() >= 8.5f) {
 		if (CheckHitKey(KEY_INPUT_B)) {
 			player->ChangeState(Player::sAttack2);
 		}
 	}
-	else if (player->animator->IsFinish()) {
-		player->ChangeState(Player::sNormal);
-	}
-
 }
 
 PlayerAttack2::PlayerAttack2(Player* parent) :PlayerStateBase(parent)
@@ -232,13 +250,13 @@ PlayerAttack2::~PlayerAttack2()
 
 void PlayerAttack2::Update()
 {
-	if (player->animator->GetCurrentFrame() >= 8.5f) {
+	player->Attack();
+	if (player->animator->IsFinish()) {
+		player->ChangeState(Player::sNormal);
+	}else if (player->animator->GetCurrentFrame() >= 8.5f) {
 		if (CheckHitKey(KEY_INPUT_B)) {
 			player->ChangeState(Player::sAttack3);
 		}
-	}
-	else if (player->animator->IsFinish()) {
-		player->ChangeState(Player::sNormal);
 	}
 }
 
@@ -253,6 +271,7 @@ PlayerAttack3::~PlayerAttack3()
 
 void PlayerAttack3::Update()
 {
+	player->Attack();
 	if (player->animator->IsFinish()) {
 		player->ChangeState(Player::sNormal);
 	}

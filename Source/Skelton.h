@@ -18,6 +18,7 @@ private:
 	enum AnimState {
 		Anim_Idle,
 		Anim_Run,
+		Anim_Damage,
 	};
 	Animator* animator;
 };
