@@ -1,5 +1,6 @@
 #include "TitleScene.h"
-
+#include"../ImGui/imgui.h"
+#include"Pad.h"
 TitleScene::TitleScene()
 {
 }
@@ -16,6 +17,12 @@ void TitleScene::Update()
 	if (Input::IsKeyOnTrig(KEY_INPUT_ESCAPE)) {
 		SceneManager::Exit();
 	}
+	/*Pad* pad = FindGameObject<Pad>();
+	if (pad->LStickX()>=0.9f) {
+		SceneManager::ChangeScene("PLAY");
+	}*/
+	Pad* pad = FindGameObject<Pad>();
+	pad->LStickX();
 }
 
 

@@ -3,6 +3,8 @@
 #include"Stage.h"
 #include"Fighter.h"
 #include"Goblin.h"
+#include"Camera.h"
+#include"Pad.h"
 namespace {
 	const float DASH_SPEED = 3.0f;
 	const int STAMINA_HEEL_TIMER = 60 * 3;
@@ -88,9 +90,10 @@ void Player::Update()
 			camPos.z *= -1;
 		}
 
-		camPos = camPos * MGetRotY(rotation.y) + position;
-		SetCameraPositionAndTarget_UpVecY(camPos, position + VECTOR3(0, 250, 0));
+		/**/
 		//DrawFormatString(0, 200, GetColor(255, 255, 255), "(%f,%f,%f)", position.x, position.y, position.z);
+		Camera* cam = FindGameObject<Camera>();
+		cam->SetPlayerPosition(position);
 	}
 }
 
@@ -172,28 +175,58 @@ PlayerNormal::~PlayerNormal()
 
 void PlayerNormal::Update()
 {
-	if (CheckHitKey(KEY_INPUT_D)) {
-		player->rotation.y += 3.0f * DegToRad;
-	}
-	if (CheckHitKey(KEY_INPUT_A)) {
-		player->rotation.y -= 3.0f * DegToRad;
-	}
-	if (CheckHitKey(KEY_INPUT_W)) {
-		VECTOR3 velocity;
+	Pad* pad = FindGameObject<Pad>();
+	float lx = pad->LStickX();
+	float ly = pad->LStickY();
+	if (lx != 0.0f || ly != 0.0f) {
+		float angle = atan2f(lx, ly);
+		Camera* cam = FindGameObject<Camera>();
+		VECTOR3 vel = cam->ForWard() * MGetRotY(angle) * 5.0f;//進むベクトル
+		VECTOR3 forward = VECTOR3(0, 0, 1) * MGetRotY(player->rotation.y);//現在の正面ベクトル
+		VECTOR3 velNorm = vel.Normalize();
+		float c = velNorm.Dot(forward);
+		if (c >= cosf(30.0f * DegToRad)) {
+			player->position += vel;
+			player->rotation.y = atan2f(vel.x, vel.z);
+		}
+		else {
+			VECTOR3 Right = VECTOR3(1, 0, 0) * MGetRotY(player->rotation.y);
+			float c = velNorm.Dot(Right);
+			if (c > 0) {
+				player->rotation.y += 30.0f * DegToRad;
+			}
+			else {
+				player->rotation.y -= 30.0f * DegToRad;
+			}
+			//player->position += vel;
+		}
 		
 		player->animator->Play(player->Anim_Run);
-		if (CheckHitKey(KEY_INPUT_LSHIFT) && player->Stamina > 0) {
-			player->Stamina--;
-			velocity = VECTOR3(0, 0, 5 * DASH_SPEED) * MGetRotY(player->rotation.y);
-			player->IsTired = true;
-		}
-		//VECTOR3 velocity = VECTOR3(sinf(rotation.y) ,0, cosf(rotation.y))*3.0f;
-		else {
-			velocity = VECTOR3(0, 0, 5) * MGetRotY(player->rotation.y);
-		}
-		//↑回っていないベクトル*回転行列←すげえ大事
-		player->position += velocity;
 	}
+	//if (CheckHitKey(KEY_INPUT_D)) {
+	//	player->rotation.y += 3.0f * DegToRad;
+	//}
+	//if (CheckHitKey(KEY_INPUT_A)) {
+	//	player->rotation.y -= 3.0f * DegToRad;
+	//}
+	//if (CheckHitKey(KEY_INPUT_W)) {
+	//	VECTOR3 velocity;
+	//	Camera* cam = FindGameObject<Camera>();
+	//	player->animator->Play(player->Anim_Run);
+	//	player->position += cam->ForWard() * 3.0f;
+	//	if (CheckHitKey(KEY_INPUT_LSHIFT) && player->Stamina > 0) {
+	//		player->Stamina--;
+	//		velocity = VECTOR3(0, 0, 5 * DASH_SPEED) * MGetRotY(player->rotation.y);
+	//		player->position += cam->ForWard() * 5.0f;
+	//		player->IsTired = true;
+	//	}
+	//	//VECTOR3 velocity = VECTOR3(sinf(rotation.y) ,0, cosf(rotation.y))*3.0f;
+	//	else {
+	//		velocity = VECTOR3(0, 0, 5) * MGetRotY(player->rotation.y);
+	//	}
+	//	//↑回っていないベクトル*回転行列←すげえ大事
+	//	//player->position += velocity;
+	//}
 	else {
 		player->animator->Play(player->Anim_Neutral);
 	}
@@ -207,7 +240,7 @@ void PlayerNormal::Update()
 	if (player->velocityY < 0 && !(player->OnGround)) {
 		player->animator->Play(player->Anim_JumpInLast);
 	}
-	if (CheckHitKey(KEY_INPUT_B)) {//攻撃
+	if (CheckHitKey(KEY_INPUT_B)||pad->IsPushed(pad->ATTACK)) {//攻撃
 		player->ChangeState(Player::sAttack1);
 	}
 }

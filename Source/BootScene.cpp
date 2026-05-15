@@ -1,7 +1,8 @@
 #include "BootScene.h"
-
+#include"Pad.h"
 BootScene::BootScene()
 {
+	new Pad();
 }
 
 BootScene::~BootScene()
