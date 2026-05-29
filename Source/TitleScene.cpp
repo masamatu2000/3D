@@ -1,8 +1,31 @@
 #include "TitleScene.h"
 #include"../ImGui/imgui.h"
 #include"Pad.h"
+#include<fstream>
+
 TitleScene::TitleScene()
 {
+	//テキストファイルは0Aを0D0Aに変えて保存する
+	std::ofstream fs("data/test.bin",std::ios::binary);//ファイルを開く
+	struct STR{
+		int i1;
+		int i2;
+	};
+	STR st;
+	st.i1 = 1000;
+	st.i2 = 500;
+	fs.write((char*)&st, sizeof(st));
+	fs.close();//ファイルを閉じる
+	std::ifstream fr("data/test.bin");//ファイルを開く
+	STR str2;
+	int y;
+	fr.read((char*)&str2, sizeof(str2));
+	fr.close();
+
+	const char* s = "ABC\nDEF";
+	std::ofstream ff("data/moji.bin",std::ios::binary);
+	ff.write(s, strlen(s)+1);
+	ff.close();
 }
 
 TitleScene::~TitleScene()

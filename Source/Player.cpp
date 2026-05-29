@@ -11,6 +11,7 @@ namespace {
 	const float G = 3.0f / 60.0f;
 	const float H = 64.0f * 3.0f;
 	const float LIMIT_FIGHTER_DIS = 50;
+	Pad* pad = nullptr;
 }
 Player::Player(VECTOR3 pos,float rotY)
 {
@@ -45,6 +46,7 @@ Player::Player(VECTOR3 pos,float rotY)
 	//animator->Play(0);
 	state = sNormal;
 	stateInst = new PlayerNormal(this);
+	pad = FindGameObject<Pad>();
 }
 
 Player::~Player()
@@ -175,7 +177,7 @@ PlayerNormal::~PlayerNormal()
 
 void PlayerNormal::Update()
 {
-	Pad* pad = FindGameObject<Pad>();
+	
 	float lx = pad->LStickX();
 	float ly = pad->LStickY();
 	if (lx != 0.0f || ly != 0.0f) {
@@ -240,7 +242,7 @@ void PlayerNormal::Update()
 	if (player->velocityY < 0 && !(player->OnGround)) {
 		player->animator->Play(player->Anim_JumpInLast);
 	}
-	if (CheckHitKey(KEY_INPUT_B)||pad->IsPushed(pad->ATTACK)) {//UŒ‚
+	if (pad->PushTrigger(pad->ATTACK)) {//UŒ‚
 		player->ChangeState(Player::sAttack1);
 	}
 }
@@ -265,7 +267,7 @@ void PlayerAttack1::Update()
 	}
 
 	else if (player->animator->GetCurrentFrame() >= 8.5f) {
-		if (CheckHitKey(KEY_INPUT_B)) {
+		if (pad->PushTrigger(pad->ATTACK)) {
 			player->ChangeState(Player::sAttack2);
 		}
 	}
@@ -287,7 +289,7 @@ void PlayerAttack2::Update()
 	if (player->animator->IsFinish()) {
 		player->ChangeState(Player::sNormal);
 	}else if (player->animator->GetCurrentFrame() >= 8.5f) {
-		if (CheckHitKey(KEY_INPUT_B)) {
+		if (pad->PushTrigger(pad->ATTACK)) {
 			player->ChangeState(Player::sAttack3);
 		}
 	}

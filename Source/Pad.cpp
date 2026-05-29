@@ -12,12 +12,19 @@ Pad::~Pad()
 
 void Pad::Update()
 {
+	prevState = inputState;
 	GetJoypadXInputState(DX_INPUT_PAD1, &inputState);
 	if (CheckHitKey(KEY_INPUT_D)) {
 		inputState.ThumbLX = 32767;
 	}
 	if (CheckHitKey(KEY_INPUT_A)) {
 		inputState.ThumbLX = -32768;
+	}
+	if (CheckHitKey(KEY_INPUT_W)) {
+		inputState.ThumbLY = 32767;
+	}
+	if (CheckHitKey(KEY_INPUT_S)) {
+		inputState.ThumbLY = -32768;
 	}
 	if (CheckHitKey(KEY_INPUT_DOWN)) {
 		inputState.ThumbRY = -32768;
@@ -75,6 +82,14 @@ float Pad::RStickY()
 bool Pad::IsPushed(int id)
 {
 	return inputState.Buttons[id]!=0;
+}
+
+bool Pad::PushTrigger(int id)
+{
+	if (prevState.Buttons[id]==0&&inputState.Buttons[id]!=0) {
+		return true;
+	}
+	return false;
 }
 
 float StickCal(float stick)

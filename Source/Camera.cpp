@@ -39,14 +39,14 @@ void Camera::Update()
 void Camera::Draw()
 {
 	VECTOR3 lp = lookPos + VECTOR3(0, 150, 0);
-
+	
 	VECTOR3 offset =
 		VECTOR3(0, 0, -600)
 		* MGetRotX(rotation.x)
 		* MGetRotY(rotation.y);
 
 	VECTOR3 camPos = lp + offset;
-	SetCameraPositionAndTarget_UpVecY(camPos, lookPos+ VECTOR3(0, 150, 0));
+	SetCameraPositionAndTarget_UpVecY(camPos, lp);
 }
 
 VECTOR3 Camera::ForWard()
