@@ -1,0 +1,32 @@
+	struct Header {
+		char chunk[4]; // "MAPD"
+		int CharaInfoNum; // キャラデータの数
+		int ObjectInfoNum; // オブジェクトデータの数
+		int EventInfoNum; // イベントデータの数
+		VECTOR PlayerPosition; // プレイヤー座標
+		float PlayerAngle; // プレイヤーのY軸回転
+		int RenderType; // レンダリング方法
+		int ClearCondition; // クリア条件
+		int killCharaNum; // 倒すべき敵の数
+		int killTargetChara; // 倒すべき敵の番号
+	};
+	struct CharaInfo {
+		int id; // 種類(1:Goblin, 2:Bee, 3:Golem, 4:RedGoblin
+		VECTOR position; // 座標
+		float angle; // Y軸回転
+	};
+	struct ObjectInfo {
+		int id; // 種類
+		VECTOR position; // 座標
+		VECTOR rotation; // 回転
+		VECTOR scale; // 拡縮
+	};
+	struct EventInfo {
+		int type; // 種類
+		VECTOR position; // 中心座標
+		VECTOR area; // 範囲
+		int bgm; // 曲番号
+		int objectNum; // オブジェクトの数
+		int object[8]; // オブジェクトの番号
+	};
+

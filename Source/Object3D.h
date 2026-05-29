@@ -17,4 +17,5 @@ protected:
 	VECTOR3 position;
 	VECTOR3 rotation;
 	VECTOR3 velocity;
+	VECTOR3 scale;
 };

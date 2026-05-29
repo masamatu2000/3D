@@ -15,9 +15,9 @@ namespace {
 }
 PlayScene::PlayScene()
 {
-	new Player(VECTOR3(0,0,0),0);
-	new Goblin(VECTOR3(0, 100, 300), 180 * DegToRad);
-	new Goblin(VECTOR3(300, 100, 300), 180 * DegToRad);
+	//new Player(VECTOR3(0,0,0),0);
+	//new Goblin(VECTOR3(0, 100, 300), 180 * DegToRad);
+	//new Goblin(VECTOR3(300, 100, 300), 180 * DegToRad);
 	new Stage();
 	new Camera();
 	//new Skelton();

@@ -72,11 +72,13 @@ void Player::Update()
 	
 	DrawStaminaUI();
 	//’n–Ê‚Æ‚Ì“–‚½‚è”»’è
-	Stage* stage = FindGameObject<Stage>();
-	VECTOR3 hitPos;
-	
 	position.y += velocityY;
 	velocityY -= G;
+	Stage* stage = FindGameObject<Stage>();
+	VECTOR3 hitPos;
+	VECTOR3 pushVec = stage->CollideSphere(position + VECTOR3(0, 70, 0), 60);
+	position += pushVec;
+	
 	stage->CollideRay(position + VECTOR3(0, 1000, 0), position + VECTOR3(0, -1000, 0), &hitPos);
 	if (stage) {
 		if (position.y < hitPos.y) {
@@ -177,7 +179,7 @@ PlayerNormal::~PlayerNormal()
 
 void PlayerNormal::Update()
 {
-	
+	Pad* pad = FindGameObject<Pad>();
 	float lx = pad->LStickX();
 	float ly = pad->LStickY();
 	if (lx != 0.0f || ly != 0.0f) {
@@ -232,7 +234,7 @@ void PlayerNormal::Update()
 	else {
 		player->animator->Play(player->Anim_Neutral);
 	}
-	if (Input::IsKeyOnTrig(KEY_INPUT_SPACE) && player->OnGround) {
+	if ((Input::IsKeyOnTrig(KEY_INPUT_SPACE)|| pad->PushTrigger(pad->JUMP))&& player->OnGround) {
 		player->velocityY = sqrt(2 * G * H);
 		player->OnGround = false;
 	}

@@ -13,6 +13,7 @@ public:
 	bool IsPushed(int id);//idのボタンを押しているか
 	bool PushTrigger(int id);//idのボタンを押した瞬間か
 	static const int ATTACK = XINPUT_BUTTON_X;
+	static const int JUMP = XINPUT_BUTTON_A;
 private:
 	XINPUT_STATE inputState;
 	XINPUT_STATE prevState;

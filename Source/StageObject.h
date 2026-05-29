@@ -1,0 +1,11 @@
+#pragma once
+#include"Object3D.h"
+class StageObject :public Object3D {
+public:
+	StageObject(int id, VECTOR3 pos, VECTOR3 rot, VECTOR3 sca);
+	~StageObject();
+	void Draw() override;
+	bool CollideRay(VECTOR3 start, VECTOR3 end, VECTOR3* hit);
+private:
+	int hHitModel;
+};

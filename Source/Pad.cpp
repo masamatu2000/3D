@@ -41,6 +41,9 @@ void Pad::Update()
 	if (CheckHitKey(KEY_INPUT_B)) {
 		inputState.Buttons[ATTACK] = 1;
 	}
+	if (CheckHitKey(KEY_INPUT_SPACE)) {
+		inputState.Buttons[JUMP] = 1;
+	}
 	ImGui::Begin("PAD");
 	int xl = inputState.ThumbLX;
 	int yl = inputState.ThumbLY;
