@@ -12,6 +12,7 @@ public:
 	virtual VECTOR3 GetPos() { return position; }
 	virtual void SetPos(VECTOR3 pos) { position = pos; }
 	virtual void SetModel(int model) { hModel = model; }
+	VECTOR3 Forward();
 protected:
 	int hModel;
 	VECTOR3 position;

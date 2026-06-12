@@ -5,6 +5,9 @@
 #include"Goblin.h"
 #include"Object.h"
 #include"StageObject.h"
+#include"../ImGui/imgui.h"
+#define DEBUG_MODE true //コメントつけるより、DEBUG_MODEを使うことで効率よく開発していますよとアピールできる
+
 Stage::Stage()
 {
 	hModel = MV1LoadModel("data/models/Stage/Stage00.mv1");
@@ -60,15 +63,33 @@ bool Stage::CollideRay(VECTOR3 start, VECTOR3 end, VECTOR3* hit)
 
 VECTOR3 Stage::CollideSphere(VECTOR3 center, float radius)
 {
-	VECTOR3 tmpVector = { 0,0,0 };
+	VECTOR3 ret = VECTOR3{0,0,0};
+	bool sg = false;
 	MV1_COLL_RESULT_POLY_DIM result = MV1CollCheck_Sphere(hModel, -1, center, radius);
 	for (int i = 0;i < result.HitNum;i++) {
+		//result.Dim[i].Normal;//当たったポリゴンの法線
+		//Normalが上を向いているのでcontinue
+		if (result.Dim[i].Normal.y > cosf(30.0f * DegToRad)) {
+			continue;
+		}
 	//TODO:横向きの壁にはあてるけど、上向きの壁にはアテナイ
-		VECTOR3 pushDir = result.Dim[i].HitPosition - center;
+		VECTOR3 pushDir = center-result.Dim[i].HitPosition ;
 		float dist = pushDir.Size();//中心から壁までの距離
-		VECTOR3 push = pushDir.Normalize() * (radius- dist);
-		return push;//TODO:複数のポリゴンのうち一番長いのを返すべき
+		VECTOR3 push = pushDir.Normalize() * (radius- dist);//押し戻すベクトル
+		if (ret.Size() < push.Size()) {
+			ret=push;//TODO:複数のポリゴンのうち一番長いのを返すべき
+		}
 	}
+	MV1CollResultPolyDimTerminate(result);
+	//StageObjectも観る
+	std::list<StageObject*> objs = FindGameObjects<StageObject>();
+	for (StageObject* ob : objs) {
+		VECTOR3 push=ob->CollideSphere(center,radius);
+		if (ret.Size() < push.Size()) {
+			ret = push;//TODO:複数のポリゴンのうち一番長いのを返すべき
+		}
+	}
+	return ret;
 }
 
 void Stage::ReadMappingData(int stageNo)
@@ -126,11 +147,17 @@ void Stage::ReadMappingData(int stageNo)
 			break;
 		}*/
 		new Goblin(ci.position,ci.angle);
-	}for (int c = 0;c < h.ObjectInfoNum;c++) {
+	}
+#if !DEBUG_MODE
+	for (int c = 0;c < h.ObjectInfoNum;c++) {
 		ObjectInfo oi;
 		ifs.read((char*)&oi, sizeof(oi));
 		
 		new StageObject(oi.id, oi.position, oi.rotation, oi.scale);
 	}
+#endif
 	ifs.close();
+#if DEBUG_MODE
+	new Goblin(VECTOR3(80, 103, 440), 0);
+#endif
 }

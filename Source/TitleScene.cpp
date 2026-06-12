@@ -7,13 +7,15 @@ TitleScene::TitleScene()
 {
 	//テキストファイルは0Aを0D0Aに変えて保存する
 	std::ofstream fs("data/test.bin",std::ios::binary);//ファイルを開く
-	struct STR{
+	struct STR{//メモリ消費を防ぐためには上から順に大きいバイトを使う変数を書いていく
 		int i1;
 		int i2;
+		char c1;
 	};
 	STR st;
 	st.i1 = 1000;
 	st.i2 = 500;
+	int size = sizeof(st);
 	fs.write((char*)&st, sizeof(st));
 	fs.close();//ファイルを閉じる
 	std::ifstream fr("data/test.bin");//ファイルを開く

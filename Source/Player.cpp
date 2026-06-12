@@ -72,13 +72,13 @@ void Player::Update()
 	
 	DrawStaminaUI();
 	//地面との当たり判定
-	position.y += velocityY;
-	velocityY -= G;
 	Stage* stage = FindGameObject<Stage>();
 	VECTOR3 hitPos;
-	VECTOR3 pushVec = stage->CollideSphere(position + VECTOR3(0, 70, 0), 60);
+	VECTOR3 pushVec = stage->CollideSphere(position + VECTOR3(0, 60, 0), 50);
 	position += pushVec;
 	
+	position.y += velocityY;
+	velocityY -= G;
 	stage->CollideRay(position + VECTOR3(0, 1000, 0), position + VECTOR3(0, -1000, 0), &hitPos);
 	if (stage) {
 		if (position.y < hitPos.y) {
@@ -179,13 +179,21 @@ PlayerNormal::~PlayerNormal()
 
 void PlayerNormal::Update()
 {
+	Camera* cam = FindGameObject<Camera>();
 	Pad* pad = FindGameObject<Pad>();
 	float lx = pad->LStickX();
 	float ly = pad->LStickY();
 	if (lx != 0.0f || ly != 0.0f) {
 		float angle = atan2f(lx, ly);
-		Camera* cam = FindGameObject<Camera>();
-		VECTOR3 vel = cam->ForWard() * MGetRotY(angle) * 5.0f;//進むベクトル
+		cam = FindGameObject<Camera>();
+		VECTOR3 vel;//進むベクトル
+		if (pad->IsPushed(pad->DASH)) {
+			vel = cam->ForWard() * MGetRotY(angle) * 10.0f;
+			cam->Delay(0.50f);
+		}
+		else {
+			vel = cam->ForWard() * MGetRotY(angle) * 5.0f;
+		}
 		VECTOR3 forward = VECTOR3(0, 0, 1) * MGetRotY(player->rotation.y);//現在の正面ベクトル
 		VECTOR3 velNorm = vel.Normalize();
 		float c = velNorm.Dot(forward);
@@ -236,6 +244,7 @@ void PlayerNormal::Update()
 	}
 	if ((Input::IsKeyOnTrig(KEY_INPUT_SPACE)|| pad->PushTrigger(pad->JUMP))&& player->OnGround) {
 		player->velocityY = sqrt(2 * G * H);
+		cam->Delay(0.1);
 		player->OnGround = false;
 	}
 	if (player->velocityY > 0 && !(player->OnGround)) {
@@ -246,6 +255,8 @@ void PlayerNormal::Update()
 	}
 	if (pad->PushTrigger(pad->ATTACK)) {//攻撃
 		player->ChangeState(Player::sAttack1);
+		
+		cam->Delay(0.1);
 	}
 }
 
@@ -260,7 +271,26 @@ PlayerAttack1::~PlayerAttack1()
 
 void PlayerAttack1::Update()
 {
+	
 	float frame = player->animator->GetCurrentFrame();
+	//frameが3.5までの時にゴブリンに踏み込む
+	if (frame < 3.5f) {
+		Goblin* g = FindTarget();
+		if (g != nullptr) {
+			VECTOR3 AttackPos = g->GetPos() - player->GetPos();
+			AttackPos = AttackPos.Normalize();
+			VECTOR3 playerTarget = g->GetPos() - AttackPos * 100.0f;
+			float rate = frame / 3.5f;//0.0~1.0になる
+		
+			player->position = ((playerTarget-player->position)*rate+player->position);//Lerpのやつだね！
+			player->rotation.y = atan2(AttackPos.x, AttackPos.z);
+		}
+		else {
+			VECTOR3 playerTarget = player->position + player->Forward() * 100;
+			float rate = frame / 3.5f;//0.0~1.0になる
+			player->position = ((playerTarget - player->position) * rate + player->position);//Lerpのやつだね！
+		}
+	}
 	if (frame >= 3.5f && frame <= 8.5f) {
 		player->Attack();
 	}
@@ -273,6 +303,11 @@ void PlayerAttack1::Update()
 			player->ChangeState(Player::sAttack2);
 		}
 	}
+}
+
+void PlayerAttack1::AttackGoblin(VECTOR3 attackpos)
+{
+
 }
 
 PlayerAttack2::PlayerAttack2(Player* parent) :PlayerStateBase(parent)
@@ -328,4 +363,26 @@ void Player::Draw()
 	VECTOR3 p = VECTOR3(0, 0, 0) * m;
 	VECTOR3 edge=VECTOR3(0,-100,0)*m;
 	DrawLine3D(edge,p,GetColor(255,0,0));
+	DrawSphere3D(position + VECTOR3(0, 60, 0), 50, 20, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
+	DrawFormatString(0, 30, GetColor(255, 255, 255), "PLAYER POISTION (%f,%f,%f)", position.x, position.y, position.z);
+}
+
+Goblin* PlayerStateBase::FindTarget()
+{
+	VECTOR3 tmp;
+	float LimitDeg =cosf(60.0f*DegToRad);
+	float tmpDeg = 0.0f;
+	Goblin* ret = nullptr;
+	float nearest = 600.0f;
+	std::list<Goblin*> goblins = FindGameObjects<Goblin>();
+	for (Goblin* g : goblins) {
+		//近いもので60°（視野内）のゴブリンを抽出
+		tmp = g->GetPos() - player->GetPos();
+		tmpDeg = tmp.Dot(player->Forward());
+		if (tmp.Size() < nearest&&tmpDeg>LimitDeg) {//角度はcosの値でかえって来てるのでtmpDegのcosの値がDegtoGobよりも大きいほうを採用する
+			nearest = tmp.Size();
+			ret = g;
+		}
+	}
+	return ret;
 }

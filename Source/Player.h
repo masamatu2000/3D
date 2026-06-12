@@ -2,6 +2,7 @@
 #include"../library/GameObject.h"
 #include"Object3D.h"
 #include"Animator.h"
+class Goblin;
 class Player;
 class PlayerStateBase {
 public:
@@ -9,6 +10,7 @@ public:
 	PlayerStateBase(Player* parent) { player = parent; }
 	~PlayerStateBase() {}
 	virtual void Update() {}
+	Goblin* FindTarget();
 protected:
 	Player* player;
 };
@@ -23,7 +25,7 @@ public:
 	PlayerAttack1(Player* parent);
 	~PlayerAttack1();
 	void Update() override;
-
+	void AttackGoblin(VECTOR3 attackpos);
 };
 class PlayerAttack2 :public PlayerStateBase {
 public:

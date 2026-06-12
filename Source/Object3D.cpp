@@ -31,3 +31,8 @@ void Object3D::Draw()
 	MV1DrawModel(hModel);
 	
 }
+
+VECTOR3 Object3D::Forward()
+{
+	return VECTOR3(0,0,1)*MGetRotY(rotation.y);
+}

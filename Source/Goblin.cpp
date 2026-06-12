@@ -1,6 +1,7 @@
 #include "Goblin.h"
 #include <assert.h>
 #include"Player.h"
+#include"Stage.h"
 Goblin::Goblin(VECTOR3 pos, float rotY)
 {
 	hModel = MV1LoadModel("data/models/Character/Goblin/Goblin.mv1");
@@ -30,6 +31,14 @@ Goblin::~Goblin()
 void Goblin::Update()
 {
 	animator->Update();
+	Stage* stage = FindGameObject<Stage>();
+	VECTOR3 hitPos;
+	stage->CollideRay(position + VECTOR3(0, 1000, 0), position + VECTOR3(0, -1000, 0), &hitPos);
+	if (stage) {
+		if (position.y < hitPos.y) {
+			position = hitPos;
+		}
+	}
 	cap->bottom = VECTOR3(position.x, position.y, position.z);
 	cap->top = VECTOR3(position.x, position.y + 150, position.z);
 	switch (state) {
@@ -46,6 +55,7 @@ void Goblin::Update()
 		UpdateGoBack();
 		break;
 	}
+
 }
 
 void Goblin::Draw()
@@ -92,8 +102,19 @@ void Goblin::UpdateNormal()
 
 void Goblin::UpdateDamage()
 {
+	float frame = animator->GetCurrentFrame();
+	if (frame < 7.0f) {
+		Player* pl = FindGameObject<Player>();
+		VECTOR3 Attackedpos = pl->GetPos() - position;
+		float rate = frame / 7.0f;//0.0~1.0になる
+		Attackedpos = Attackedpos.Normalize();
+		VECTOR3 TargetPos = position -Forward() * 50.0f;
+		position = ((TargetPos - position) * rate + position);//Lerpのやつだね！
+		rotation.y = atan2(Attackedpos.x, Attackedpos.z);
+	}
 	if (animator->IsFinish()) {
-		DestroyMe();
+		state = sNormal;
+		animator->Play(aStand);
 	}
 }
 
