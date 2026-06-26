@@ -79,7 +79,7 @@ void Player::Update()
 	
 	position.y += velocityY;
 	velocityY -= G;
-	stage->CollideRay(position + VECTOR3(0, 1000, 0), position + VECTOR3(0, -1000, 0), &hitPos);
+	stage->CollideRay(position + VECTOR3(0, 100, 0), position + VECTOR3(0, -500, 0), &hitPos);
 	if (stage) {
 		if (position.y < hitPos.y) {
 			position = hitPos;
@@ -360,11 +360,14 @@ void Player::Draw()
 	MV1DrawModel(hWeapon);
 	MV1SetPosition(hWeapon, VECTOR3(0, 200, 0));
 	MV1DrawModel(hWeapon);
-	VECTOR3 p = VECTOR3(0, 0, 0) * m;
-	VECTOR3 edge=VECTOR3(0,-100,0)*m;
-	DrawLine3D(edge,p,GetColor(255,0,0));
-	DrawSphere3D(position + VECTOR3(0, 60, 0), 50, 20, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
-	DrawFormatString(0, 30, GetColor(255, 255, 255), "PLAYER POISTION (%f,%f,%f)", position.x, position.y, position.z);
+
+	if (not ObjectManager::ShadowDrawing()) {
+		VECTOR3 p = VECTOR3(0, 0, 0) * m;
+		VECTOR3 edge = VECTOR3(0, -100, 0) * m;
+		DrawLine3D(edge, p, GetColor(255, 0, 0));
+		DrawSphere3D(position + VECTOR3(0, 60, 0), 50, 20, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
+		DrawFormatString(0, 30, GetColor(255, 255, 255), "PLAYER POISTION (%f,%f,%f)", position.x, position.y, position.z);
+	}
 }
 
 Goblin* PlayerStateBase::FindTarget()

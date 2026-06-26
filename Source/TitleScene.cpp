@@ -39,6 +39,9 @@ void TitleScene::Update()
 	if (Input::IsKeyOnTrig(KEY_INPUT_P)) {
 		SceneManager::ChangeScene("PLAY");
 	}
+	if (Input::IsKeyOnTrig(KEY_INPUT_M)) {
+		SceneManager::ChangeScene("MODEL");
+	}
 	if (Input::IsKeyOnTrig(KEY_INPUT_ESCAPE)) {
 		SceneManager::Exit();
 	}

@@ -6,6 +6,7 @@
 #include "PlayScene.h"
 #include"GameOver.h"
 #include"Game Clear.h"
+#include"ModelViewer.h"
 SceneBase* SceneFactory::CreateFirst()
 {
 	return new BootScene();
@@ -26,6 +27,9 @@ SceneBase * SceneFactory::Create(const std::string & name)
 	}
 	if (name == "GAME CLEAR") {
 		return new GameClear();
+	}
+	if (name == "MODEL") {
+		return new ModelViewer();
 	}
 	MessageBox(NULL, ("éüÇÃÉVÅ[ÉìÇÕÇ†ÇËÇ‹ÇπÇÒ\n" + name).c_str(), "SceneFactory", MB_ICONERROR | MB_OK);
 	assert(false);

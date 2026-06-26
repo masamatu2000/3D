@@ -46,6 +46,8 @@ void Camera::Update()
 	if (rotation.x <- 45.0f * DegToRad) {
 		rotation.x = -45.0f * DegToRad;
 	}
+
+	ObjectManager::SetShadowBox(position+VECTOR3(-1000,-1,-1000),position+VECTOR3(1000,1000,1000));
 }
 
 void Camera::Draw()

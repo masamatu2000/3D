@@ -160,6 +160,8 @@
     <ClInclude Include="Source\Game Clear.h" />
     <ClInclude Include="Source\GameOver.h" />
     <ClInclude Include="Source\Goblin.h" />
+    <ClInclude Include="Source\Light.h" />
+    <ClInclude Include="Source\ModelViewer.h" />
     <ClInclude Include="Source\Object.h" />
     <ClInclude Include="Source\Object3D.h" />
     <ClInclude Include="Source\Pad.h" />
@@ -194,6 +196,8 @@
     <ClCompile Include="Source\Game Clear.cpp" />
     <ClCompile Include="Source\GameOver.cpp" />
     <ClCompile Include="Source\Goblin.cpp" />
+    <ClCompile Include="Source\Light.cpp" />
+    <ClCompile Include="Source\ModelViewer.cpp" />
     <ClCompile Include="Source\Object.cpp" />
     <ClCompile Include="Source\Object3D.cpp" />
     <ClCompile Include="Source\Pad.cpp" />

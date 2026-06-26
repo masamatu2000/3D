@@ -6,6 +6,7 @@
 #include"Fighter.h"
 #include"Goblin.h"
 #include"Camera.h"
+#include"Light.h"
 namespace {
 	const int SkeltonAppear = 600;
 	int GAME_CLEAR_TIMER = 3600;
@@ -20,6 +21,7 @@ PlayScene::PlayScene()
 	//new Goblin(VECTOR3(300, 100, 300), 180 * DegToRad);
 	new Stage();
 	new Camera();
+	new Light();
 	//new Skelton();
 	timer = 0;
 	mode = READY;

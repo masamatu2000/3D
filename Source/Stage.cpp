@@ -6,7 +6,7 @@
 #include"Object.h"
 #include"StageObject.h"
 #include"../ImGui/imgui.h"
-#define DEBUG_MODE true //コメントつけるより、DEBUG_MODEを使うことで効率よく開発していますよとアピールできる
+#define DEBUG_MODE false //コメントつけるより、DEBUG_MODEを使うことで効率よく開発していますよとアピールできる
 
 Stage::Stage()
 {

@@ -33,7 +33,7 @@ void Goblin::Update()
 	animator->Update();
 	Stage* stage = FindGameObject<Stage>();
 	VECTOR3 hitPos;
-	stage->CollideRay(position + VECTOR3(0, 1000, 0), position + VECTOR3(0, -1000, 0), &hitPos);
+	stage->CollideRay(position + VECTOR3(0, 100, 0), position + VECTOR3(0, -500, 0), &hitPos);
 	if (stage) {
 		if (position.y < hitPos.y) {
 			position = hitPos;
